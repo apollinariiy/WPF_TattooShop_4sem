@@ -1,0 +1,95 @@
+﻿<Window x:Class="WpfApp.Views.SketchWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp.Views"
+        xmlns:vm="clr-namespace:WpfApp.ViewModels"
+        mc:Ignorable="d"
+        Title="SketchWindow" Height="450" Width="800" WindowState="Maximized">
+    <Window.DataContext>
+        <vm:SketchViewModel/>
+    </Window.DataContext>
+    <Window.Icon>
+        <ImageSource>\image\logo48x48.png</ImageSource>
+    </Window.Icon>
+    <Grid Background="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.15*"></RowDefinition>
+    
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="0.45*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Menu Background="Transparent" >
+            <MenuItem Header="Главная" Command="{Binding StartCommand}" Style="{StaticResource MenuClick}"/>
+            <MenuItem Header="Эскизы" BorderThickness="1" BorderBrush="White" Foreground="Black" Background="White">
+                <MenuItem.ItemsSource>
+                    <Binding Path="TatooTypesList" />
+                </MenuItem.ItemsSource>
+                <MenuItem.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Header" Value="{Binding}" />
+                        <Setter Property="Command" Value="{Binding DataContext.SearchChangeCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                        <Setter Property="CommandParameter" Value="{Binding}" />
+                    </Style>
+                </MenuItem.ItemContainerStyle>
+            </MenuItem>
+            <MenuItem Header="Мастера" Command="{Binding MasterCommand}" Style="{StaticResource MenuClick}"/>
+            <MenuItem Width="25" Click="Personal_Window_Click">
+                <MenuItem.Template>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Image Source="D:\4sem\кп\image\Group.png" Stretch="Uniform">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Opacity" Value="0.5"/>
+                                                
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </Grid>
+                    </ControlTemplate>
+                </MenuItem.Template>
+            </MenuItem>
+
+            <MenuItem Width="35" Click="Favorite_Window_Click">
+                <MenuItem.Template>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Image Source="D:\4sem\кп\image\greenheart.png" Stretch="Uniform">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Opacity" Value="0.5"/>
+
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </Grid>
+                    </ControlTemplate>
+                </MenuItem.Template>
+            </MenuItem>
+        </Menu>
+       
+        <ListBox Grid.Row="1" BorderThickness="0" Background="Black" Margin="40 0" ItemsSource="{Binding SearchResult, UpdateSourceTrigger=PropertyChanged}" ItemTemplate="{StaticResource SketchForm}">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
+        <Grid Grid.Row="2">
+            <Grid.Background>
+                <ImageBrush ImageSource="\image\Frame.jpg" />
+            </Grid.Background>
+        </Grid>
+    </Grid>
+</Window>

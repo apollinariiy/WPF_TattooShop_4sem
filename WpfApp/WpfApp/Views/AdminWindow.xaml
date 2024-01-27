@@ -1,0 +1,206 @@
+﻿<Window x:Class="WpfApp.Views.AdminWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:WpfApp.Views"
+         xmlns:vm="clr-namespace:WpfApp.ViewModels"
+        mc:Ignorable="d"
+        Title="AdminWindow" Height="800" Width="1400" WindowState="Maximized">
+    <Window.DataContext>
+        <vm:AdminViewModel/>
+    </Window.DataContext>
+    <Window.Icon>
+        <ImageSource>D:\4sem\кп\image\logo48x48.png</ImageSource>
+    </Window.Icon>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TabControl Grid.Row="2" Grid.ColumnSpan="2">
+
+            <TabItem Header="Пользователи"  Background="White" Foreground="Black" FontSize="12" FontWeight="Bold" Padding="15 10" Width="150" Margin="0 5" VerticalAlignment="Center">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.075*"></RowDefinition>
+                        <RowDefinition Height="0.9*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Margin="10,10,9,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Margin="0 0 5 0"  Text="{Binding Query, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"/>
+                        <Button Grid.Column="1" Content="Search" Style="{StaticResource DefaultButtonStyle}" Width="200" Height="100" FontSize="18" Command="{Binding SearchCommand}"/>
+                </Grid>
+                <DataGrid ItemsSource="{Binding UserDataGrid, Mode=OneWay}" IsReadOnly="True" AutoGenerateColumns="False"
+                  VirtualizingPanel.ScrollUnit="Pixel" Margin="10" Grid.Row="1">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Id}" Header="ID" Width="50" />
+                        <DataGridTextColumn Binding="{Binding FullName}" Header="ФИО" Width="200" />
+                        <DataGridTextColumn Binding="{Binding Login}" Header="Логин" Width="150" />
+                        <DataGridTextColumn Binding="{Binding EMail}" Header="Почта" Width="200" />
+                        <DataGridTextColumn Binding="{Binding Phone}" Header="Номер телефона" Width="150" />
+                        <DataGridTextColumn Binding="{Binding Address}" Header="Адрес" Width="200" />
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.Header>
+                                <TextBlock Text="Заблокировать" />
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{StaticResource DeleteUserCommand}" CommandParameter="{Binding}" Style="{StaticResource DefaultButtonStyle}" >
+                                        <TextBlock Text="Edit"></TextBlock>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Эскизы"  Background="White" Foreground="Black" FontSize="12" FontWeight="Bold" Padding="15 10" Width="150" Margin="0 5" VerticalAlignment="Center">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.07*"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <ComboBox  SelectedItem="{Binding FilterType}" ItemsSource="{Binding TatooTypesFilterList}" Foreground="DimGray" FontSize="14" Text="Select Type" IsEditable="True">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding SearchChangeCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                    <DataGrid ItemsSource="{Binding SketchDataGrid, Mode=OneWay}" IsReadOnly="True" AutoGenerateColumns="False" Grid.Row="1"
+                  VirtualizingPanel.ScrollUnit="Pixel" Margin="10">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Id}" Header="ID" Width="50" />
+                            <DataGridTextColumn Binding="{Binding Type}" Header="Стиль" Width="200" />
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.Header>
+                                    <TextBlock Text="Удалить" />
+                                </DataGridTemplateColumn.Header>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{StaticResource DeleteSketchCommand}" CommandParameter="{Binding}" Style="{StaticResource DefaultButtonStyle}" >
+                                            <TextBlock Text="Удалить"></TextBlock>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Grid.Column="1" Orientation="Vertical" Margin="15" Grid.Row="1">
+                        <TextBlock Text="Стиль" Margin="0 10 0 5" Foreground="Black" FontSize="14" />
+                        <ComboBox ItemsSource="{Binding TatooTypesList}"  SelectedItem="{Binding Type}"  Foreground="DimGray" FontSize="14" Text="Select Type" IsEditable="True">
+                        </ComboBox>
+                        <StackPanel Orientation="Horizontal">
+                            <Grid Width="100" Height="100" Margin="15">
+                                <Border BorderBrush="Black" BorderThickness="1">
+                                    <Image Source="{Binding Image}" Stretch="Uniform" Width="100" Height="100"/>
+                                </Border>
+                            </Grid>
+                            <Button Command="{Binding ImageCommand}" Content="Загрузить изображение"   Style="{StaticResource DefaultButtonStyle}" Background="White" Foreground="Black"  FontSize="14" FontWeight="Bold" Padding="15 10" Width="200" Height="50" Margin="30 20" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <Button Content="Сохранить" Command="{Binding SaveCommand}" Style="{StaticResource DefaultButtonStyle}" Background="#e9edf5" Foreground="Black" FontSize="16" FontWeight="Bold" Padding="15 10" Width="660" Height="50" Margin="0 20" VerticalAlignment="Center"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Мастера"  Background="White" Foreground="Black" FontSize="12" FontWeight="Bold" Padding="15 10" Width="150" Margin="0 5" VerticalAlignment="Center">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.7*"></ColumnDefinition>
+                        <ColumnDefinition Width="0.3*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid ItemsSource="{Binding MasterDataGrid, Mode=OneWay}" IsReadOnly="True" AutoGenerateColumns="False"
+                  VirtualizingPanel.ScrollUnit="Pixel" Margin="10" SelectionChanged="DataGrid_SelectionChanged">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Id}" Header="ID" Width="50" />
+                            <DataGridTextColumn Binding="{Binding FullName}" Header="ФИО" Width="200" />
+                            <DataGridTextColumn Binding="{Binding Type}" Header="Стиль" Width="200" />
+                            <DataGridTextColumn Binding="{Binding Experience}" Header="Стаж" Width="200" />
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.Header>
+                                    <TextBlock Text="Удалить" />
+                                </DataGridTemplateColumn.Header>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{StaticResource DeleteMasterCommand}" CommandParameter="{Binding}" Style="{StaticResource DefaultButtonStyle}" >
+                                            <TextBlock Text="Удалить"></TextBlock>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                   
+                    <StackPanel Grid.Column="1" >
+                        <TextBlock Text="Фамилия" Margin="0 10 0 5" Foreground="Black" FontSize="14" />
+                        <TextBox Margin="0 0 0 10" Text="{Binding Surname}"  BorderThickness="0 0 0 1" BorderBrush="DimGray" Background="Transparent" Foreground="Black" FontSize="16" />
+                        <TextBlock Text="Имя" Margin="0 10 0 5" Foreground="Black" FontSize="14" />
+                        <TextBox Margin="0 0 0 10" Text="{Binding Name}" BorderThickness="0 0 0 1" BorderBrush="DimGray" Background="Transparent" Foreground="Black" FontSize="16" />
+                        <TextBlock Text="Отчесво" Margin="0 10 0 5" Foreground="Black" FontSize="14" />
+                        <TextBox Margin="0 0 0 10" Text="{Binding MiddleName}"  BorderThickness="0 0 0 1" BorderBrush="DimGray" Background="Transparent" Foreground="Black" FontSize="16" />
+                        <ComboBox ItemsSource="{Binding TatooTypesList}"  SelectedItem="{Binding TypeMaster}"  Foreground="DimGray" FontSize="14" Text="Select Type" IsEditable="True"
+                          />
+                        <TextBlock Text="Стаж" Margin="0 10 0 5" Foreground="Black" FontSize="14" />
+                        <TextBox Margin="0 0 0 10" Text="{Binding Experience}"  BorderThickness="0 0 0 1" BorderBrush="DimGray" Background="Transparent" Foreground="Black" FontSize="16" />
+                        <StackPanel Orientation="Horizontal">
+                            <Grid Width="100" Height="100" Margin="15">
+                                <Border BorderBrush="Black" BorderThickness="1">
+                                    <Image Source="{Binding ImageMaster}" Stretch="Uniform" />
+                                </Border>
+                            </Grid>
+                            <Button Command="{Binding ImageMasterCommand}" Content="Загрузить изображение" Background="White" Foreground="Black" Style="{StaticResource DefaultButtonStyle}" FontSize="14" FontWeight="Bold" Padding="15 10" Width="200" Height="50" Margin="30 20" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <Button Content="Сохранить" Command="{Binding SaveMasterCommand}" Style="{StaticResource DefaultButtonStyle}" Background="#e9edf5" Foreground="Black" FontSize="16" FontWeight="Bold" Padding="15 10" Width="400" Height="50" Margin="0 20" VerticalAlignment="Center"  HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Сеансы"  Background="White" Foreground="Black" FontSize="12" FontWeight="Bold" Padding="15 10" Width="150" Margin="0 5" VerticalAlignment="Center">
+                <DataGrid ItemsSource="{Binding ReservationDataGrid, Mode=OneWay}" IsReadOnly="True" AutoGenerateColumns="False"
+                  VirtualizingPanel.ScrollUnit="Pixel" Margin="10" SelectionChanged="DataGrid_SelectionChanged">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Id}" Header="ID" Width="50" />
+                        <DataGridTextColumn Binding="{Binding User.Id}" Header="Клиент" Width="50" />
+                        <DataGridTextColumn Binding="{Binding Master.Id}" Header="Мастер" Width="200" />
+                        <DataGridTextColumn Binding="{Binding Date, StringFormat={}{0:dd.MM.yyyy}}" Header="Дата" Width="200" />
+                        <DataGridTextColumn Binding="{Binding Time}" Header="Время" Width="200" />
+                        <DataGridTemplateColumn Width="150">
+                            <DataGridTemplateColumn.Header>
+                                <TextBlock Text="Напоминание" />
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate >
+                                <DataTemplate>
+                                    <Button Command="{StaticResource ReminderCommand}" CommandParameter="{Binding}" Style="{StaticResource DefaultButtonStyle}" >
+                                        <TextBlock Text="Напомнить о записи"></TextBlock>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="150">
+                            <DataGridTemplateColumn.Header>
+                                <TextBlock Text="Отмена записи" />
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{StaticResource CancelReservationCommand}" CommandParameter="{Binding}" Style="{StaticResource DefaultButtonStyle}" >
+                                        <TextBlock Text="Отменить запись"></TextBlock>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

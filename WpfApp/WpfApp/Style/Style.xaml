@@ -1,0 +1,250 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                    xmlns:models="clr-namespace:WpfApp.Models"
+                    xmlns:cmd="clr-namespace:WpfApp.Infrastructure.Commands">
+    <cmd:FavoriteCommand x:Key="FavoriteCommand" />
+    <cmd:ReservMasterCommand x:Key="ReservMasterCommand" />
+    <cmd:DeleteReservationCommand x:Key="DeleteReservationCommand"/>
+    <cmd:DeleteFavoriteCommand x:Key="DeleteFavoriteCommand"/>
+    <cmd:DeleteUserCommand x:Key="DeleteUserCommand"/>
+    <cmd:DeleteSketchCommand x:Key="DeleteSketchCommand"/>
+    <cmd:DeleteMasterCommand x:Key="DeleteMasterCommand"/>
+    <cmd:ReminderCommand x:Key="ReminderCommand"/>
+    <cmd:CancelReservationCommand x:Key="CancelReservationCommand"/>
+
+    <Style TargetType="MenuItem">
+         <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontFamily" Value="\Fonts\#Donpoligrafbum"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="Margin" Value="10 0"/>
+    </Style>
+    <Style TargetType="MenuItem" x:Key="MenuClick">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontFamily" Value="\Fonts\#Donpoligrafbum"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="Margin" Value="10 0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="MenuItem">
+                    <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter Content="{TemplateBinding Header}"
+                                      ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                      ContentStringFormat="{TemplateBinding HeaderStringFormat}"
+                                      Margin="{TemplateBinding Padding}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="Foreground" Value="#42ff00"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="Image" x:Key="ImageClick">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Width" Value="50"/>
+            </Trigger>
+        </Style.Triggers> 
+    </Style>
+    <Style TargetType="Menu">
+        <Setter Property="Margin" Value="0 10"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+    </Style>
+    <Style x:Key="MenuItem" TargetType="MenuItem">
+        <Setter Property="Background" Value="#1A1A1A"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+    <Style x:Key="CustomTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="White" />
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Margin" Value="5 20 0 20"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            CornerRadius="15">
+                        <ScrollViewer x:Name="PART_ContentHost" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="#42FF00"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="#42FF00"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="Width" Value="500"/>
+        <Setter Property="Padding" Value="5 5"/>
+    </Style>
+            <DataTemplate x:Key="SketchForm" DataType="{x:Type models:Sketch}">
+        <Border BorderThickness="2" BorderBrush="#42FF00" >
+            <Grid Width="300" Height="300">
+                <Grid.Background>
+                    <ImageBrush ImageSource="{Binding Image}" />
+                </Grid.Background>
+
+                <Button x:Name="heartButton" CommandParameter="{Binding}" Command="{StaticResource FavoriteCommand}" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Bottom" BorderThickness="0" Margin="10" Visibility="Hidden">
+                    <Button.Content>
+                        <Image Width="40" Height="40">
+                            <Image.Style>
+                                <Style TargetType="{x:Type Image}">
+                                    <Setter Property="Source" Value="\image\darkheart.png"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsFavorite, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                            <Setter Property="Source" Value="\image\greenheart.png"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                    </Button.Content>
+                </Button>
+
+
+
+            </Grid>
+        </Border>
+        <DataTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="heartButton" Property="Visibility" Value="Visible" />
+            </Trigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+   
+
+    <DataTemplate x:Key="MastersList" DataType="{x:Type models:Master}">
+        <Grid Margin="15">
+           
+            <StackPanel Orientation="Horizontal">
+                <Ellipse Width="100" Height="100" x:Name="MyEllipse">
+            <Ellipse.Fill>
+                <ImageBrush ImageSource="{Binding Image}"/>
+            </Ellipse.Fill>
+                  
+                </Ellipse>
+                <TextBlock Text="{Binding Name}" x:Name="MyText" Foreground="White" FontFamily="\Fonts\#Donpoligrafbum" FontSize="16" VerticalAlignment="Center" Margin="20"></TextBlock>
+            </StackPanel>
+        </Grid>
+        <DataTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="MyEllipse" Property="Stroke" Value="#42ff00" />
+                <Setter TargetName="MyEllipse" Property="StrokeThickness" Value="2" />
+                <Setter TargetName="MyEllipse" Property="Width" Value="110" />
+                <Setter TargetName="MyEllipse" Property="Height" Value="110" />
+                <Setter TargetName="MyText" Property="FontSize" Value="20"/>
+                <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+    
+    <Style x:Key="MainTitle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontFamily" Value="\Fonts\#Donpoligrafbum"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="Margin" Value="0 40"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="MainTitleLog" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontFamily" Value="\Fonts\#Oldtimer Regular"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="Margin" Value="0 40"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="SubTitle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontFamily" Value="\Fonts\#Oldtimer Regular"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="Margin" Value="0 0 0 20"/>
+    </Style>
+
+    <Style TargetType="ComboBox">
+        <Setter Property="FontSize" Value="18"></Setter>
+        <Setter Property="IsEditable" Value="true"></Setter>
+        <Setter Property="Margin" Value="10 10 10 10"></Setter>
+    </Style>
+
+    <Style x:Key="DefaultButtonStyle" TargetType="Button">
+
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Background" Value="DarkGray" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderBrush" Value="DarkGray" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <Style TargetType="{x:Type ScrollBar}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="#1a1a1a"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollBar}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Track Name="PART_Track" 
+                           IsDirectionReversed="true">
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" 
+                                          Opacity="0" 
+                                          Background="Transparent" />
+                            </Track.DecreaseRepeatButton>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" 
+                                          Opacity="0" 
+                                          Background="Transparent" />
+                            </Track.IncreaseRepeatButton>
+                            <Track.Thumb>
+                                <Thumb>
+                                    <Thumb.Template>
+                                        <ControlTemplate TargetType="{x:Type Thumb}">
+                                            <Grid Height="15">
+                                                <Border Background="Transparent" CornerRadius="10" BorderBrush="#42ff00" BorderThickness="1"/>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+   
+
+
+
+
+
+
+
+
+
+
+
+</ResourceDictionary>
